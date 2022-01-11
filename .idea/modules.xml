@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/SpringReactivePgJson/SpringReactivePgJson.iml" filepath="$PROJECT_DIR$/SpringReactivePgJson/SpringReactivePgJson.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/pokes.iml" filepath="$PROJECT_DIR$/.idea/pokes.iml" />
+    </modules>
+  </component>
+</project>
