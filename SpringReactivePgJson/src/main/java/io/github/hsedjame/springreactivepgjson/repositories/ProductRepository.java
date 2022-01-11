@@ -1,10 +1,11 @@
 package io.github.hsedjame.springreactivepgjson.repositories;
 
-import io.github.hsedjame.springreactivepgjson.models.Distributor;
 import io.github.hsedjame.springreactivepgjson.models.Product;
 
 import io.github.hsedjame.springreactivepgjson.models.ProductInfo;
-import io.r2dbc.postgresql.codec.Json;
+import io.github.hsedjame.springreactivepgjson.models.projections.CityProjection;
+import io.github.hsedjame.springreactivepgjson.models.projections.DistributorProjection;
+import io.github.hsedjame.springreactivepgjson.models.projections.ProductInfoProjection;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
@@ -36,14 +37,4 @@ public interface ProductRepository extends ReactiveCrudRepository<Product, UUID>
            """)
     Flux<CityProjection> findDistributionCities(@Param("name") String productName);
 
-    @Query("""
-            SELECT q.product FROM
-            (
-            SELECT infos as product,
-                     ((json_array_elements(infos -> 'distributors') -> 'cities')::jsonb ?& array['Web']) as result
-            FROM products
-            ) q
-            WHERE q.result = true;
-           """)
-    Flux<ProductInfo> findDistributedProductsByCity(@Param("name") String cityName);
 }
