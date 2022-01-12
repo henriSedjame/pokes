@@ -1,4 +1,4 @@
-package io.github.hsedjame.springreactivepgjson.models;
+package io.github.hsedjame.springreactivepgjson.data.entities;
 
 import java.io.Serializable;
 import java.util.List;

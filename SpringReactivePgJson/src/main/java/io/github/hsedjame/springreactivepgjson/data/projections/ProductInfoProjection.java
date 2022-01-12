@@ -1,9 +1,9 @@
-package io.github.hsedjame.springreactivepgjson.models.projections;
+package io.github.hsedjame.springreactivepgjson.data.projections;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.hsedjame.springreactivepgjson.models.Distributor;
-import io.github.hsedjame.springreactivepgjson.models.ProductInfo;
+import io.github.hsedjame.springreactivepgjson.data.entities.Distributor;
+import io.github.hsedjame.springreactivepgjson.data.entities.ProductInfo;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;

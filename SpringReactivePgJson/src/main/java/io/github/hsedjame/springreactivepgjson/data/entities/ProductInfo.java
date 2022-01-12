@@ -1,4 +1,4 @@
-package io.github.hsedjame.springreactivepgjson.models;
+package io.github.hsedjame.springreactivepgjson.data.entities;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

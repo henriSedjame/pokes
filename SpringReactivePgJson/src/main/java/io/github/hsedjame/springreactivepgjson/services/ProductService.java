@@ -1,8 +1,6 @@
 package io.github.hsedjame.springreactivepgjson.services;
 
-import io.github.hsedjame.springreactivepgjson.models.projections.ProductInfoProjection;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Service;
+import io.github.hsedjame.springreactivepgjson.data.projections.ProductInfoProjection;
 import reactor.core.publisher.Flux;
 
 import java.util.List;

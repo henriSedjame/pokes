@@ -1,6 +1,6 @@
 package io.github.hsedjame.springreactivepgjson.services;
 
-import io.github.hsedjame.springreactivepgjson.models.projections.ProductInfoProjection;
+import io.github.hsedjame.springreactivepgjson.data.projections.ProductInfoProjection;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;

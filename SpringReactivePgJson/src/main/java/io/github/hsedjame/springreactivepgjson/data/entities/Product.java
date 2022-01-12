@@ -1,4 +1,4 @@
-package io.github.hsedjame.springreactivepgjson.models;
+package io.github.hsedjame.springreactivepgjson.data.entities;
 
 import io.r2dbc.postgresql.codec.Json;
 import org.springframework.data.annotation.Id;

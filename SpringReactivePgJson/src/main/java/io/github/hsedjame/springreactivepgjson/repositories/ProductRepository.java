@@ -1,24 +1,22 @@
 package io.github.hsedjame.springreactivepgjson.repositories;
 
-import io.github.hsedjame.springreactivepgjson.models.Product;
+import io.github.hsedjame.springreactivepgjson.data.entities.Product;
 
-import io.github.hsedjame.springreactivepgjson.models.ProductInfo;
-import io.github.hsedjame.springreactivepgjson.models.projections.CityProjection;
-import io.github.hsedjame.springreactivepgjson.models.projections.DistributorProjection;
-import io.github.hsedjame.springreactivepgjson.models.projections.ProductInfoProjection;
+import io.github.hsedjame.springreactivepgjson.data.projections.CityProjection;
+import io.github.hsedjame.springreactivepgjson.data.projections.DistributorProjection;
+import io.github.hsedjame.springreactivepgjson.data.projections.ProductProjection;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface ProductRepository extends ReactiveCrudRepository<Product, UUID> {
 
     @Query("SELECT * FROM products WHERE infos ->> 'name' = :name")
-    Mono<Product> findByName(@Param("name") String productName);
+    Mono<ProductProjection> findByName(@Param("name") String productName);
 
     @Query("""
            SELECT

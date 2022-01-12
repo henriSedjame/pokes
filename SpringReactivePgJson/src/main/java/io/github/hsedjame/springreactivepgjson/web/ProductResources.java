@@ -1,27 +1,29 @@
 package io.github.hsedjame.springreactivepgjson.web;
 
-import io.github.hsedjame.springreactivepgjson.models.Distributor;
-import io.github.hsedjame.springreactivepgjson.models.ProductInfo;
-import io.github.hsedjame.springreactivepgjson.models.projections.CityProjection;
-import io.github.hsedjame.springreactivepgjson.models.projections.DistributorProjection;
-import io.github.hsedjame.springreactivepgjson.models.projections.ProductInfoProjection;
+import io.github.hsedjame.springreactivepgjson.data.entities.Distributor;
+import io.github.hsedjame.springreactivepgjson.data.entities.ProductInfo;
+import io.github.hsedjame.springreactivepgjson.data.projections.CityProjection;
+import io.github.hsedjame.springreactivepgjson.data.projections.DistributorProjection;
+import io.github.hsedjame.springreactivepgjson.data.projections.ProductInfoProjection;
+import io.github.hsedjame.springreactivepgjson.data.projections.ProductProjection;
 import io.github.hsedjame.springreactivepgjson.repositories.ProductRepository;
 import io.github.hsedjame.springreactivepgjson.services.ProductService;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/products")
 public record ProductResources(ProductRepository repository, ProductService service) {
+
+    @GetMapping("/{name}")
+    public Mono<ProductProjection> byName(@PathVariable("name") String name){
+        return repository.findByName(name);
+    }
 
     @GetMapping("/{name}/distributors")
     public Flux<Distributor> distributors(@PathVariable("name") String name) {
@@ -37,8 +39,8 @@ public record ProductResources(ProductRepository repository, ProductService serv
                 .map(CityProjection::name);
     }
 
-    @GetMapping("/{cities}")
-    public Flux<ProductInfo> byCities(@PathVariable("cities") String cities) {
+    @GetMapping("/distributed")
+    public Flux<ProductInfo> byCities(@RequestParam("cities") String cities) {
         return service.findDistributedProductsByCity(Arrays.asList(cities.split(",")))
                 .map(ProductInfoProjection::map)
                 .map(Optional::orElseThrow)
