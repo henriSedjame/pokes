@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public record ReactiveProductServices(R2dbcEntityTemplate template) implements ProductService {
 
-    private static final String SQL = """
+    public static final String SQL = """
             SELECT q.product ->> 'name' as name,
                     q.product -> 'distributors' as distributors,
                     cast(q.product ->> 'price' as DECIMAL) as price
