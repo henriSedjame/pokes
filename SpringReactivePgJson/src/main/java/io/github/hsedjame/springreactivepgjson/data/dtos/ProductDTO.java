@@ -12,7 +12,6 @@ import java.util.UUID;
 public record ProductDTO(UUID id, ProductInfoDTO infos) {
 
     public static Optional<ProductDTO> fromProjection(ProductProjection projection) {
-
         try {
             ProductInfoDTO info = new ObjectMapper().readValue(projection.infos(), ProductInfoDTO.class);
             return Optional.of(new ProductDTO(projection.id(), info));

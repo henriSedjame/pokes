@@ -2,6 +2,7 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/SpringReactivePgJson/src/main/java/io/github/hsedjame/springreactivepgjson/repositories/ProductRepository.java" dialect="PostgreSQL" />
-    <file url="file://$PROJECT_DIR$/SpringReactivePgJson/src/main/resources/init.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/SpringReactivePgJson/src/main/resources/queries.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/SpringReactivePgJson/src/main/resources/schema.sql" dialect="PostgreSQL" />
   </component>
 </project>

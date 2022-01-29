@@ -32,3 +32,5 @@ FROM
     FROM products p
     ) q
 WHERE q.result = true;
+
+json_array_elements('[1,true, [2,false]]');

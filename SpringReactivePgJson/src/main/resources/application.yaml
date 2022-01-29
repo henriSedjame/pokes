@@ -1,6 +1,9 @@
 spring:
   r2dbc:
     name: postgres
-    password: postgres
+    password: hsedjame
     username: postgres
     url: r2dbc:postgresql://localhost:5432
+  sql:
+    init:
+      mode: always

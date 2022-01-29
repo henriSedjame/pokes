@@ -1,4 +1,3 @@
 package io.github.hsedjame.springreactivepgjson.data.projections;
 
-public record CityProjection(String name) {
-}
+public record CityProjection(String name) {}

@@ -45,7 +45,9 @@ public class SpringReactivePgJsonApplication {
                         Stream.of(xbox, ps, raspberrypi, mac, iphone)
                                 .map(Product::withInfos)
                                 .map(Optional::orElseThrow)
-                                .forEach(p -> template.insert(p).subscribe( sp -> System.out.printf("Product %s registered%n", sp.id().toString())))
+                                .forEach(p -> template
+                                        .insert(p)
+                                        .subscribe( sp -> System.out.printf("Product %s registered%n", sp.id().toString())))
             );
         };
     }

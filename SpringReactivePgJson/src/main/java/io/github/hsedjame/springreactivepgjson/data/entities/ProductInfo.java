@@ -9,19 +9,21 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-public record ProductInfo(String name, BigDecimal price, List<Distributor> distributors) implements Serializable {
+public record ProductInfo(String name,
+                          BigDecimal price,
+                          List<Distributor> distributors)
+        implements Serializable {
 
-    public static Optional<ProductInfo> fromJson(Json json) {
-        try {
-            return Optional.of(new ObjectMapper().readValue(json.asString(), ProductInfo.class));
-        } catch (JsonProcessingException e) {
-            return Optional.empty();
-        }
-    }
-
+    /**
+     * Permet de transformer une information produit en objet de type Json
+     * @return un optional de json
+     */
     public Optional<Json> toJson() {
         try {
-            return Optional.of(Json.of(new ObjectMapper().writeValueAsString(this)));
+            return Optional.of(
+                    Json.of(
+                            new ObjectMapper().writeValueAsString(this)
+                    ));
         } catch (JsonProcessingException e) {
             return Optional.empty();
         }

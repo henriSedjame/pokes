@@ -13,8 +13,8 @@ public record ReactiveProductServices(R2dbcEntityTemplate template) implements P
 
     public static final String SQL = """
             SELECT q.product ->> 'name' as name,
-                    q.product -> 'distributors' as distributors,
-                    cast(q.product ->> 'price' as DECIMAL) as price
+                   q.product -> 'distributors' as distributors,
+                   cast(q.product ->> 'price' as DECIMAL) as price
             FROM
                 (
                     SELECT p.infos as product,
@@ -37,11 +37,13 @@ public record ReactiveProductServices(R2dbcEntityTemplate template) implements P
         String sql = sql(cities);
 
         return template.getDatabaseClient()
-                .sql(sql).map((row ->
-                new ProductInfoProjection(
-                        row.get("name", String.class),
-                        row.get("price", BigDecimal.class),
-                        row.get("distributors", String.class))))
+                .sql(sql)
+                .map(row ->
+                        new ProductInfoProjection(
+                                row.get("name", String.class),
+                                row.get("price", BigDecimal.class),
+                                row.get("distributors", String.class))
+                )
                 .all();
     }
 }

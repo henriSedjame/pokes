@@ -52,7 +52,6 @@ public record ProductHandler(ProductRepository repository, ProductService servic
     @NonNull
     public Mono<ServerResponse> findDistributedIn(ServerRequest request) {
         String cities = request.queryParam("cities").orElse("");
-        System.out.println(cities);
         return ServerResponse.ok().body(
                 service.findDistributedProductsByCity(Arrays.asList(cities.split(",")))
                         .map(ProductInfoDTO::fromProjection)

@@ -17,6 +17,5 @@ public record DistributorDTO(String name, List<String> cities) {
         } catch (JsonProcessingException e) {
            return Optional.empty();
         }
-
     }
 }

@@ -5,3 +5,4 @@ CREATE TABLE IF NOT EXISTS PRODUCTS
     id  uuid NOT NULL PRIMARY KEY,
     infos JSON
 );
+

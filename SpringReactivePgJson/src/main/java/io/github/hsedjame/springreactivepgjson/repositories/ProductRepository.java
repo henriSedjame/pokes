@@ -18,38 +18,34 @@ import java.util.UUID;
 
 public interface ProductRepository extends ReactiveCrudRepository<Product, UUID> {
 
+
     @Query("SELECT * FROM products WHERE infos ->> 'name' = :name")
     Mono<ProductProjection> findByName(@Param("name") String productName);
 
+
     @Query("""
            SELECT
-                  json_array_elements(infos -> 'distributors') ->> 'name' as name,
-                  json_array_elements(infos -> 'distributors') -> 'cities' as cities
-           FROM products
-           WHERE infos ->> 'name' = :name
+               distribs.value ->> 'name' as name,
+               distribs.value -> 'cities' as cities
+           FROM
+           (
+               SELECT
+                   json_array_elements(infos -> 'distributors') as value
+               FROM products
+               WHERE infos ->> 'name' = :name
+           ) distribs
            """)
     Flux<DistributorProjection> findDistributors(@Param("name") String productName);
 
+
     @Query("""
-            SELECT distinct json_array_elements_text(
+           SELECT distinct 
+            json_array_elements_text(
                 json_array_elements(infos -> 'distributors') -> 'cities'
-           ) as name FROM products
-            WHERE infos ->> 'name' = :name
+            ) as name 
+           FROM products
+           WHERE infos ->> 'name' = :name
            """)
     Flux<CityProjection> findDistributionCities(@Param("name") String productName);
 
-    @Query("""
-          SELECT q.product ->> 'name' as name,
-                  q.product -> 'distributors' as distributors,
-                  cast(q.product ->> 'price' as DECIMAL) as price
-            FROM
-                (
-                    SELECT p.infos as product,
-                        ((json_array_elements(infos -> 'distributors') -> 'cities')::jsonb ?| array[:cities]) as result
-                    FROM products p
-                ) q
-            WHERE q.result = true
-          """)
-
-    Flux<ProductInfoProjection> findDistributedProductsByCity(@Param("cities") String cities);
 }
