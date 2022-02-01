@@ -11,7 +11,7 @@
     <groupId>io.github.hsedjame</groupId>
     <artifactId>SpringReactivePgJson</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>SpringReactivePgJson</name>
+    <name>postgres-reactive-nosql</name>
     <description>SpringReactivePgJson</description>
     <properties>
         <java.version>17</java.version>

@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SpringReactivePgJson/SpringReactivePgJson.iml" filepath="$PROJECT_DIR$/SpringReactivePgJson/SpringReactivePgJson.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mongodb-reactive-querydsl/mongodb-reactive-querydsl.iml" filepath="$PROJECT_DIR$/mongodb-reactive-querydsl/mongodb-reactive-querydsl.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/pokes.iml" filepath="$PROJECT_DIR$/.idea/pokes.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SpringReactivePgJson/postgres-reactive-nosql.iml" filepath="$PROJECT_DIR$/SpringReactivePgJson/postgres-reactive-nosql.iml" />
     </modules>
   </component>
 </project>

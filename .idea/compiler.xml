@@ -6,16 +6,19 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="SpringReactivePgJson" />
+        <module name="mongodb-reactive-querydsl" />
+        <module name="postgres-reactive-nosql" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="SpringReactivePgJson" target="17" />
+      <module name="mongodb-reactive-querydsl" target="17" />
+      <module name="postgres-reactive-nosql" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="SpringReactivePgJson" options="-parameters" />
+      <module name="mongodb-reactive-querydsl" options="-parameters" />
+      <module name="postgres-reactive-nosql" options="-parameters" />
     </option>
   </component>
 </project>
