@@ -4,7 +4,6 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/SpringReactivePgJson/pom.xml" />
-        <option value="$PROJECT_DIR$/mongodb-reactive-querydsl/pom.xml" />
         <option value="$PROJECT_DIR$/postgres-reactive-nosql/pom.xml" />
       </list>
     </option>
