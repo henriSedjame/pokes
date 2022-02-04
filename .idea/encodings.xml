@@ -4,5 +4,6 @@
     <file url="file://$PROJECT_DIR$/mongodb-reactive-querydsl/src/main/kotlin" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/postgres-reactive-nosql/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/postgres-reactive-nosql/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/server-sent-events-kotlin-reactive/src/main/kotlin" charset="UTF-8" />
   </component>
 </project>

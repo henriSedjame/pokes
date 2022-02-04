@@ -1,0 +1,12 @@
+
+GET http://localhost:8080/chat/Cho
+Content-Type: application/json
+
+###
+
+POST http://localhost:8080/chat/Gaelle
+Content-Type: application/json
+
+{
+  "message" : "Hey, how are you ?"
+}

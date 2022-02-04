@@ -5,6 +5,7 @@
       <list>
         <option value="$PROJECT_DIR$/SpringReactivePgJson/pom.xml" />
         <option value="$PROJECT_DIR$/postgres-reactive-nosql/pom.xml" />
+        <option value="$PROJECT_DIR$/server-sent-events-kotlin-reactive/pom.xml" />
       </list>
     </option>
   </component>
