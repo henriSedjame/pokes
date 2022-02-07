@@ -1,33 +1,22 @@
 package io.github.hsedjame.serversenteventskotlinreactive
 
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactive.asFlow
-import kotlinx.coroutines.selects.select
-import org.springframework.beans.factory.annotation.Autowired
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Bean
-import org.springframework.context.event.EventListener
 import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.reactive.function.BodyExtractor
 import org.springframework.web.reactive.function.server.*
-import reactor.core.publisher.Mono
 import reactor.core.publisher.Sinks
-import reactor.netty.http.server.HttpServerRequest
-import java.time.LocalDateTime
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.nio.file.Paths
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentSkipListMap
-import java.util.concurrent.ConcurrentSkipListSet
 import kotlin.concurrent.timer
-import kotlin.concurrent.timerTask
 
 
 @SpringBootApplication
@@ -39,7 +28,7 @@ class ServerSentEventsKotlinReactiveApplication {
 
     @Bean
     fun chatState() = ChatState(
-        participants = ConcurrentSkipListSet(),
+        participants = ArrayList(),
         messages = ConcurrentHashMap()
     )
 

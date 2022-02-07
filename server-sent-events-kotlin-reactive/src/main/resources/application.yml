@@ -1,0 +1,7 @@
+spring:
+  web:
+    resources:
+
+      static-locations: file:/Users/henrijoelsedjame/development/POKES/pokes/server-sent-events-kotlin-reactive/client/src
+  webflux:
+    static-path-pattern: file:/Users/henrijoelsedjame/development/POKES/pokes/server-sent-events-kotlin-reactive/client/src/**

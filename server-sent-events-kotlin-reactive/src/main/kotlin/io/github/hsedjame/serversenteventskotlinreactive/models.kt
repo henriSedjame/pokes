@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentSkipListSet
 
 data class ChatState(
-    val participants: ConcurrentSkipListSet<Participant>,
+    val participants: ArrayList<Participant>,
     val messages: ConcurrentHashMap<String, ArrayList<Message>>)
 
 

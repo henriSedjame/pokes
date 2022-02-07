@@ -26,7 +26,7 @@ data class EventEmitter(private val chatSink: Sinks.Many<ChatEvent>, private val
 
     suspend fun newMessage(sender: String, message: String) {
 
-        when (state.messages.contains(sender) ) {
+        when (state.participants.map { it.name }.contains(sender)) {
             true -> {
                 state.messages[sender].let {
                     it?.add(Message(message, LocalDateTime.now()))
@@ -34,7 +34,7 @@ data class EventEmitter(private val chatSink: Sinks.Many<ChatEvent>, private val
                 emitEvent(NewMessage(sender, message), sender, "Oups an error occured")
             }
             false -> {
-
+                chatSink.tryEmitNext(NewError(sender, "This username is already used"))
             }
         }
 
