@@ -1,9 +1,7 @@
 package io.github.hsedjame.serversenteventskotlinreactive
 
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -12,9 +10,7 @@ import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.*
 import reactor.core.publisher.Sinks
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.nio.file.Paths
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.timer
@@ -29,7 +25,7 @@ class ServerSentEventsKotlinReactiveApplication {
 
     @Bean
     fun chatState() = ChatState(
-        participants = AtomicReference(ArrayList()),
+        participants = AtomicReference(TreeSet()),
         messages = ConcurrentHashMap()
     )
 

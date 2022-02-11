@@ -1,12 +1,12 @@
 package io.github.hsedjame.serversenteventskotlinreactive
 
 import java.time.LocalDateTime
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.ConcurrentSkipListSet
 import java.util.concurrent.atomic.AtomicReference
 
 data class ChatState(
-    val participants: AtomicReference<ArrayList<Participant>>,
+    val participants: AtomicReference<TreeSet<Participant>>,
     val messages: ConcurrentHashMap<String, ArrayList<Message>>)
 
 
