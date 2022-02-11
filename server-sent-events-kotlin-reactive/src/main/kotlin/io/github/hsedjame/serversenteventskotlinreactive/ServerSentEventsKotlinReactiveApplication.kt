@@ -16,6 +16,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.file.Paths
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.concurrent.timer
 
 
@@ -28,7 +29,7 @@ class ServerSentEventsKotlinReactiveApplication {
 
     @Bean
     fun chatState() = ChatState(
-        participants = ArrayList(),
+        participants = AtomicReference(ArrayList()),
         messages = ConcurrentHashMap()
     )
 

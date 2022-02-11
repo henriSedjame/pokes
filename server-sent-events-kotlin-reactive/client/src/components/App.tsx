@@ -52,10 +52,17 @@ export class App extends React.Component<any, AppState> {
                         this.setState({message: ''})
                     }
                     break
-                case EventType.ERROR:
+                case EventType.MODERATOR_MESSAGE: {
+                    if (data.author === this.state.user) {
+                        this.setState({messages: [new Message(data.author, data.message, false, true), ...this.state.messages]})
+                    }
+                    break
+                }
+                case EventType.ERROR: {
                     if (data.receiver == this.state.user) {
                         alert(data.message)
                     }
+                }
             }
         }
     }
@@ -66,15 +73,15 @@ export class App extends React.Component<any, AppState> {
     }
 
     sendMessage = () => {
+        this.setState({message: ''})
         http.post("/" + this.state.user, {message: this.state.message})
             .catch(e => alert(e.message))
     }
 
-
     render() {
 
         return (
-            <div className="container-fluid min-vw-100 min-vh-100" style={{backgroundColor: "#2b2f36"}}>
+            <div className="container min-vw-100 min-vh-100 bg-dark" style={{backgroundColor: "#2b2f36"}}>
                 <div className="row row-cols-2">
                     <ConnectedUsersView users={this.state.users}/>
 
@@ -100,21 +107,5 @@ export class App extends React.Component<any, AppState> {
             </div>
         );
     }
-
-    //render() {
-    //    return this.state.registered
-    //        ? <ChatView
-    //            user={this.state.user}
-    //            value={this.state.message}
-    //            messages={this.state.messages}
-    //            users={this.state.users}
-    //            onMessage={(msg) =>  this.setState({message: msg})}
-    //            onSendMessage={this.sendMessage} />
-    //        : <EntryView
-    //            value={this.state.user}
-    //            save={(name) => this.setState({user: name})}
-    //            ready={this.state.user !== undefined}
-    //            register={this.register} />
-    //}
 
 }

@@ -20,7 +20,7 @@ export class ChatView extends React.Component<ChatViewProps, any> {
         return (
             <div className="col-10 min-vh-100 bg-dark ">
 
-               <div className="overflow-auto align-items-end justify-content-start d-flex" style={{height: "90%"}}>
+               <div className="overflow-auto align-items-end justify-content-start d-flex pb-2" style={{height: "90%"}}>
                    <div className="container ">
                        <div className="row">
                            {
@@ -31,6 +31,7 @@ export class ChatView extends React.Component<ChatViewProps, any> {
                                        sender={msg.sender}
                                        message={msg.message}
                                        newConnection={msg.newConnection}
+                                       moderator={msg.moderatorMessage}
                                    />)
                            }
                        </div>
@@ -38,9 +39,9 @@ export class ChatView extends React.Component<ChatViewProps, any> {
                    </div>
 
                </div>
-                <div className=" d-flex align-items-center justify-content-center px-5"  style={{height: "10%"}}>
+                <div className=" d-flex align-items-center justify-content-center px-2 pb-2"  style={{height: "10%"}}>
 
-                        <div className=" align-items-center col-xl-6 col-md-8 col-sm-10 ">
+                        <div className=" align-items-center col-11 ">
                             <div className="input-group  rounded-pill col-12 d-flex align-items-center justify-content-center px-2"  style={{height: 60, backgroundColor: "#3B3F41FF"}}>
 
 
