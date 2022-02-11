@@ -6,52 +6,68 @@ export class ChatView extends React.Component<ChatViewProps, any> {
 
     messageInput?: HTMLInputElement | null
 
-    onWritingMessage = (evt: FormEvent<HTMLInputElement>, fn: (string) => void) => {
+    onWritingMessage = (evt: FormEvent<HTMLInputElement>, fn: (msg: string) => void) => {
         evt.preventDefault();
-        fn(this.messageInput?.value)
+        let value = this.messageInput?.value || '';
+        fn(value)
     }
 
+
+
     render() {
+
+
         return (
-            <div className="container-fluid mt-5" style={{maxWidth: '600px'}}>
+            <div className="col-10 min-vh-100 bg-dark ">
 
-                <div className="input-group mb-3">
-                    <div className="input-group-prepend mx-auto">
-                        <span className="input-group-text text-center" id="basic-addon2" style={{height: 60, width: 60}}>✍️</span>
-                    </div>
-                    <input type="text"
-                           className="form-control"
-                           placeholder="Your message"
-                           aria-label="Message"
-                           aria-describedby="basic-addon2"
-                           id="message"
-                           ref={i => this.messageInput = i}
-                           onInput={(e) => this.onWritingMessage(e, this.props.onMessage)}
-                           value={this.props.value}
-                           required/>
-                    <button className={ (this.props.value !== '') ? "btn btn-primary btn-lg": "btn btn-light btn-lg"}
-                            onClick={(this.props.value !== '') ? this.props.onSendMessage : null}>
-                        SEND
-                    </button>
-                </div>
-                <div style={{height: 600}} className="bg-dark overflow-auto">
-                    {
-                        this.props.messages?.map(msg =>
-                            <MessageView
-                                key={this.props.messages?.indexOf(msg)}
-                                fromMe={msg.sender == this.props.user}
-                                sender={msg.sender}
-                                message={msg.message}/>)
-                    }
+               <div className="overflow-auto align-items-end justify-content-start d-flex" style={{height: "90%"}}>
+                   <div className="container ">
+                       <div className="row">
+                           {
+                               this.props.messages?.reverse().map(msg =>
+                                   <MessageView
+                                       key={this.props.messages?.indexOf(msg)}
+                                       fromMe={msg.sender == this.props.user}
+                                       sender={msg.sender}
+                                       message={msg.message}
+                                       newConnection={msg.newConnection}
+                                   />)
+                           }
+                       </div>
 
-                </div>
-                <div className="bg-info p-1">
-                    <p className="text-success text-center fw-bold text-white"> CONNECTED USERS </p>
-                    <div className="d-flex">
-                        {
-                            this.props.users?.map(u => <div className="bg-dark rounded m-2 text-white p-1"> 👤 {u} </div>)
-                        }
+                   </div>
+
+               </div>
+                <div className=" d-flex align-items-center justify-content-center px-5"  style={{height: "10%"}}>
+
+                        <div className=" align-items-center col-xl-6 col-md-8 col-sm-10 ">
+                            <div className="input-group  rounded-pill col-12 d-flex align-items-center justify-content-center px-2"  style={{height: 60, backgroundColor: "#3B3F41FF"}}>
+
+
+                            <input type="text"
+                                   className="form-control rounded-pill bg-dark text-white"
+                                   placeholder="Your message"
+                                   aria-label="Message"
+                                   style={{ height: 50}}
+                                   aria-describedby="basic-addon2"
+                                   id="message"
+                                   ref={i => this.messageInput = i}
+                                   onInput={(e) => this.onWritingMessage(e, this.props.onMessage)}
+                                   value={this.props.value}
+                                   required/>
+
+                            <div className="mx-1 " style={{top: 6, right: 8}}>
+                                <button
+                                    className={(this.props.value !== '') ? "btn btn-dark btn-lg shadow rounded-pill" : "btn btn-light btn-lg shadow rounded-pill"}
+                                    onClick={(this.props.value !== '') ? this.props.onSendMessage : undefined}>
+                                    SEND
+                                </button>
+
+                            </div>
+
+                        </div>
                     </div>
+
                 </div>
             </div>
         );

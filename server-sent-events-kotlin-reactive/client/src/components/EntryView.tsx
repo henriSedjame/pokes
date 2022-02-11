@@ -13,26 +13,27 @@ export class EntryView extends React.Component<UserInputProps, any> {
 
     render() {
         return (
-            <div className="container-fluid mt-5" style={{maxWidth: '600px'}}>
-                <div className="input-group mb-3">
-                    <div className="input-group-prepend mx-auto">
-                        <span className="input-group-text text-center" id="basic-addon1" style={{height: 60, width: 60}}>👤</span>
+            <div className="col-10 min-vh-100 bg-dark d-flex align-items-center justify-content-center">
+                <div className=" align-items-center col-xl-6 col-md-8 col-sm-10 ">
+                    <div className="input-group  rounded-pill col-12 d-flex align-items-center justify-content-center px-2"  style={{height: 60, backgroundColor: "#3B3F41FF"}}>
+                        <input type="text"
+                               className="form-control rounded-pill bg-dark text-white"
+                               style={{height: 50}}
+                               placeholder="Enter your login and click ENTER button to start chatting"
+                               aria-label="Username"
+                               id="user"
+                               ref={i => this.usernameInput = i}
+                               onInput={(e) => this.onWritingUsername(e, this.props.save)}
+                               value={this.props.value}
+                               required/>
+                        <div className="mx-1">
+                            <button className={ this.props.ready ? "btn btn-dark btn-lg shadow rounded-pill ": "btn btn-light btn-lg rounded-pill"} onClick={this.props.ready ? this.props.register : null}> ENTER </button>
+                        </div>
                     </div>
-                    <input type="text"
-                           className="form-control"
-                           placeholder="Enter your username"
-                           aria-label="Username"
-                           aria-describedby="basic-addon1"
-                           id="user"
-                           ref={i => this.usernameInput = i}
-                           onInput={(e) => this.onWritingUsername(e, this.props.save)}
-                           value={this.props.value}
-                           required/>
                 </div>
-                <div className="mb-3">
-                    <button className={ this.props.ready ? "btn btn-primary btn-lg": "btn btn-light btn-lg"} onClick={this.props.ready ? this.props.register : null}> ENTER </button>
-                </div>
+
             </div>
+
         );
     }
 }

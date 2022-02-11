@@ -64,7 +64,7 @@ class ServerSentEventsKotlinReactiveApplication {
                     it.pathVariable("name")
                         .let { name ->
 
-                            withDelay(2000, emitter) {
+                            withDelay(10, emitter) {
                                 newParticipant(name)
                             }
                             ServerResponse.ok().buildAndAwait()
@@ -74,7 +74,7 @@ class ServerSentEventsKotlinReactiveApplication {
                 POST("/{name}"){ it ->
 
                    it.awaitBody<MsgRequest>().let { msg->
-                       withDelay(1000, emitter){
+                       withDelay(10, emitter){
                            newMessage(it.pathVariable("name"), msg.message)
                        }
                    }

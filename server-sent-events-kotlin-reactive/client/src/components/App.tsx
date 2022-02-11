@@ -1,13 +1,13 @@
-import React, {FormEvent} from 'react'
+import React from 'react'
 
 import './App.css'
 import {AppState, Message} from "./states";
 
 import axios from 'axios'
-import {MessageView} from "./MessageView";
 import {EventType} from "./events";
 import {EntryView} from "./EntryView";
 import {ChatView} from "./ChatView";
+import {ConnectedUsersView} from "./ConnectedUsersView";
 
 const http = axios.create({
     baseURL: "http://localhost:8080/chat",
@@ -20,7 +20,7 @@ const eventSource = new EventSource("http://localhost:8080/chat/events");
 
 export class App extends React.Component<any, AppState> {
 
-    constructor(props) {
+    constructor(props: any) {
         super(props);
         this.state = {
             user: undefined,
@@ -37,23 +37,23 @@ export class App extends React.Component<any, AppState> {
 
             switch (data.type) {
                 case EventType.NEW_PARTICIPANT:
-                    if (data.name !== this.state.user) {
+                    if (data.name !== this.state.user ) {
                         if (this.state.registered) {
-                            alert(data.name + " vient de se connecter au chat");
+                            this.setState({messages: [new Message(data.name, "", true), ...this.state.messages]})
                         }
                     } else {
-                        this.setState( { registered: true })
+                        this.setState({registered: true})
                     }
-                    this.setState( { users: [data.name, ...this.state.users] })
+                    this.setState({users: [data.name, ...this.state.users]})
                     break
                 case EventType.NEW_MESSAGE:
-                    this.setState({messages: [new Message(data.author, data.message), ... this.state.messages]})
-                    if(data.author === this.state.user) {
+                    this.setState({messages: [new Message(data.author, data.message), ...this.state.messages]})
+                    if (data.author === this.state.user) {
                         this.setState({message: ''})
                     }
                     break
                 case EventType.ERROR:
-                    if(data.receiver == this.state.user) {
+                    if (data.receiver == this.state.user) {
                         alert(data.message)
                     }
             }
@@ -61,8 +61,8 @@ export class App extends React.Component<any, AppState> {
     }
 
     register = () => {
-         http.get("/" + this.state.user)
-             .catch(e => alert(e.message))
+        http.get("/" + this.state.user)
+            .catch(e => alert(e.message))
     }
 
     sendMessage = () => {
@@ -70,20 +70,51 @@ export class App extends React.Component<any, AppState> {
             .catch(e => alert(e.message))
     }
 
+
     render() {
-        return this.state.registered
-            ? <ChatView
-                user={this.state.user}
-                value={this.state.message}
-                messages={this.state.messages}
-                users={this.state.users}
-                onMessage={(msg) =>  this.setState({message: msg})}
-                onSendMessage={this.sendMessage} />
-            : <EntryView
-                value={this.state.user}
-                save={(name) => this.setState({user: name})}
-                ready={this.state.user !== undefined}
-                register={this.register} />
+
+        return (
+            <div className="container-fluid min-vw-100 min-vh-100" style={{backgroundColor: "#2b2f36"}}>
+                <div className="row row-cols-2">
+                    <ConnectedUsersView users={this.state.users}/>
+
+                    {
+                        this.state.registered
+                            ? <ChatView
+                                user={this.state.user}
+                                value={this.state.message}
+                                messages={this.state.messages}
+                                users={this.state.users}
+                                onMessage={(msg) => this.setState({message: msg})}
+                                onSendMessage={this.sendMessage}/>
+                            : <EntryView
+                                value={this.state.user}
+                                save={(name) => this.setState({user: name})}
+                                ready={this.state.user !== undefined && this.state.user != ''}
+                                register={this.register}/>
+                    }
+
+                </div>
+
+
+            </div>
+        );
     }
+
+    //render() {
+    //    return this.state.registered
+    //        ? <ChatView
+    //            user={this.state.user}
+    //            value={this.state.message}
+    //            messages={this.state.messages}
+    //            users={this.state.users}
+    //            onMessage={(msg) =>  this.setState({message: msg})}
+    //            onSendMessage={this.sendMessage} />
+    //        : <EntryView
+    //            value={this.state.user}
+    //            save={(name) => this.setState({user: name})}
+    //            ready={this.state.user !== undefined}
+    //            register={this.register} />
+    //}
 
 }
