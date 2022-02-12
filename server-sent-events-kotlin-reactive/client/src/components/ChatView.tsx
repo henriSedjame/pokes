@@ -1,6 +1,6 @@
-import React, {FormEvent} from "react";
+import React, {FormEvent, KeyboardEvent} from "react";
 import {MessageView} from "./MessageView";
-import {ChatViewProps} from "./states";
+import {ChatViewProps} from "../models/Props";
 
 export class ChatView extends React.Component<ChatViewProps, any> {
 
@@ -12,10 +12,15 @@ export class ChatView extends React.Component<ChatViewProps, any> {
         fn(value)
     }
 
-
+    onEnterPressed = (evt: KeyboardEvent<HTMLInputElement>) => {
+        if (evt.key === 'Enter' && this.props.value !== '' && this.props.value !== undefined) {
+            this.props.onSendMessage()
+        }
+    }
 
     render() {
 
+        let valueNotEmpty = this.props.value !== '' && this.props.value !== undefined ;
 
         return (
             <div className="col-10 min-vh-100 bg-dark ">
@@ -44,7 +49,6 @@ export class ChatView extends React.Component<ChatViewProps, any> {
                         <div className=" align-items-center col-11 ">
                             <div className="input-group  rounded-pill col-12 d-flex align-items-center justify-content-center px-2"  style={{height: 60, backgroundColor: "#3B3F41FF"}}>
 
-
                             <input type="text"
                                    className="form-control rounded-pill bg-dark text-white"
                                    placeholder="Your message"
@@ -54,13 +58,14 @@ export class ChatView extends React.Component<ChatViewProps, any> {
                                    id="message"
                                    ref={i => this.messageInput = i}
                                    onInput={(e) => this.onWritingMessage(e, this.props.onMessage)}
-                                   value={this.props.value}
+                                   value={this.props.value || ''}
+                                   onKeyPress={this.onEnterPressed}
                                    required/>
 
                             <div className="mx-1 " style={{top: 6, right: 8}}>
                                 <button
-                                    className={(this.props.value !== '') ? "btn btn-dark btn-lg shadow rounded-pill" : "btn btn-light btn-lg shadow rounded-pill"}
-                                    onClick={(this.props.value !== '') ? this.props.onSendMessage : undefined}>
+                                    className={valueNotEmpty ? "btn btn-dark btn-lg shadow rounded-pill" : "btn btn-light btn-lg shadow rounded-pill"}
+                                    onClick={valueNotEmpty ? this.props.onSendMessage : undefined}>
                                     SEND
                                 </button>
 

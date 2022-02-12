@@ -1,17 +1,10 @@
 import React from "react";
-import {MsgProps} from "./states";
-
-
+import {MsgProps} from "../models/Props";
 
 export class MessageView extends React.Component<MsgProps, any> {
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         let content;
-
 
         if (this.props.newConnection && !this.props.fromMe) {
 

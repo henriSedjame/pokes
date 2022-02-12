@@ -1,29 +1,20 @@
 import React from 'react'
 
 import './App.css'
-import {AppState, Message} from "./states";
-
-import axios from 'axios'
-import {EventType} from "./events";
+import {AppState} from "../models/States";
 import {EntryView} from "./EntryView";
 import {ChatView} from "./ChatView";
 import {ConnectedUsersView} from "./ConnectedUsersView";
-
-const http = axios.create({
-    baseURL: "http://localhost:8080/chat",
-    headers: {
-        "Content-type": "application/json"
-    }
-});
-
-const eventSource = new EventSource("http://localhost:8080/chat/events");
+import {Message} from "../models/Data";
+import {ChatClient} from "../services/ChatClient";
 
 export class App extends React.Component<any, AppState> {
+
+    private client!: ChatClient;
 
     constructor(props: any) {
         super(props);
         this.state = {
-            user: undefined,
             registered: false,
             messages: [],
             users: []
@@ -32,71 +23,63 @@ export class App extends React.Component<any, AppState> {
     }
 
     componentDidMount() {
-        eventSource.onmessage = (evt) => {
-            let data = JSON.parse(evt.data);
 
-            switch (data.type) {
-                case EventType.NEW_PARTICIPANT:
-                    if (data.name !== this.state.user ) {
-                        if (this.state.registered) {
-                            this.setState({messages: [new Message(data.name, "", true), ...this.state.messages]})
-                        }
-                    } else {
-                        this.setState({registered: true})
+        this.client = new ChatClient(
+            (data) => {
+                if (data.name !== this.state.user ) {
+                    if (this.state.registered) {
+                        this.setState({messages: [new Message(data.name, "", true), ...(this.state.messages)]})
                     }
-                    this.setState({users: [data.name, ...this.state.users]})
-                    break
-                case EventType.NEW_MESSAGE:
-                    this.setState({messages: [new Message(data.author, data.message), ...this.state.messages]})
-                    if (data.author === this.state.user) {
-                        this.setState({message: ''})
-                    }
-                    break
-                case EventType.MODERATOR_MESSAGE: {
-                    if (data.author === this.state.user) {
-                        this.setState({messages: [new Message(data.author, data.message, false, true), ...this.state.messages]})
-                    }
-                    break
+                } else {
+                    this.setState({registered: true})
                 }
-                case EventType.ERROR: {
-                    if (data.receiver == this.state.user) {
-                        alert(data.message)
-                    }
+                this.setState({users: [data.name, ...(this.state.users)]})
+            },
+            (data) => {
+                this.setState({messages: [new Message(data.author, data.message), ...(this.state.messages)]})
+                if (data.author === this.state.user) {
+                    this.setState({message: ''})
+                }
+            },
+            (data) => {
+                if (data.author === this.state.user) {
+                    this.setState({messages: [new Message(data.author, data.message, false, true), ...(this.state.messages)]})
+                }
+            },
+            (data) => {
+                if (data.receiver == this.state.user) {
+                    alert(data.message)
                 }
             }
-        }
+        )
+
     }
 
-    register = () => {
-        http.get("/" + this.state.user)
-            .catch(e => alert(e.message))
-    }
+    register = () =>
+        this.client.register(this.state.user!);
 
-    sendMessage = () => {
-        this.setState({message: ''})
-        http.post("/" + this.state.user, {message: this.state.message})
-            .catch(e => alert(e.message))
-    }
+    sendMessage = () =>
+        this.client.sendMessage(this.state.user!, this.state.message!, () => this.setState({message: ''}));
+
 
     render() {
-
         return (
             <div className="container min-vw-100 min-vh-100 bg-dark" style={{backgroundColor: "#2b2f36"}}>
                 <div className="row row-cols-2">
-                    <ConnectedUsersView users={this.state.users}/>
+                    <ConnectedUsersView users={this.state.users!}/>
 
                     {
                         this.state.registered
                             ? <ChatView
-                                user={this.state.user}
-                                value={this.state.message}
+                                user={this.state.user!}
+                                value={this.state.message!}
                                 messages={this.state.messages}
                                 users={this.state.users}
-                                onMessage={(msg) => this.setState({message: msg})}
+                                onMessage={(msg: string) => this.setState({message: msg})}
                                 onSendMessage={this.sendMessage}/>
                             : <EntryView
-                                value={this.state.user}
-                                save={(name) => this.setState({user: name})}
+                                value={this.state.user!}
+                                save={(name: string) => this.setState({user: name })}
                                 ready={this.state.user !== undefined && this.state.user != ''}
                                 register={this.register}/>
                     }

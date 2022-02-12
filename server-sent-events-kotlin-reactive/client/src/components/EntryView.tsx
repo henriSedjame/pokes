@@ -1,14 +1,20 @@
-import React, {FormEvent} from "react";
-import {UserInputProps} from "./states";
+
+import React, {EventHandler, FormEvent, KeyboardEvent, KeyboardEventHandler} from "react";
+import {UserInputProps} from "../models/Props";
 
 export class EntryView extends React.Component<UserInputProps, any> {
 
-    usernameInput?: HTMLInputElement | null
+    usernameInput?: HTMLInputElement |  null
 
-    onWritingUsername = (evt: FormEvent<HTMLInputElement>, fn: (string) => void) => {
+    onWritingUsername = (evt: FormEvent<HTMLInputElement>, fn: (val: string) => void) => {
         evt.preventDefault();
-        fn(this.usernameInput?.value)
-        console.log(this.state.user)
+        fn(this.usernameInput?.value!)
+    }
+
+    onEnterPressed = (evt: KeyboardEvent<HTMLInputElement>) => {
+        if (evt.key === 'Enter' && this.props.ready) {
+            this.props.register()
+        }
     }
 
     render() {
@@ -24,10 +30,11 @@ export class EntryView extends React.Component<UserInputProps, any> {
                                id="user"
                                ref={i => this.usernameInput = i}
                                onInput={(e) => this.onWritingUsername(e, this.props.save)}
-                               value={this.props.value}
+                               value={this.props.value || ''}
+                               onKeyPress={this.onEnterPressed}
                                required/>
                         <div className="mx-1">
-                            <button className={ this.props.ready ? "btn btn-dark btn-lg shadow rounded-pill ": "btn btn-light btn-lg rounded-pill"} onClick={this.props.ready ? this.props.register : null}> ENTER </button>
+                            <button className={ this.props.ready ? "btn btn-dark btn-lg shadow rounded-pill ": "btn btn-light btn-lg rounded-pill"} onClick={this.props.ready ? this.props.register : undefined}> ENTER </button>
                         </div>
                     </div>
                 </div>
@@ -36,4 +43,6 @@ export class EntryView extends React.Component<UserInputProps, any> {
 
         );
     }
+
+
 }

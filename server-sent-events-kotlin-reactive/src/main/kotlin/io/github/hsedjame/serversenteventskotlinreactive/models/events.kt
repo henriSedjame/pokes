@@ -1,4 +1,4 @@
-package io.github.hsedjame.serversenteventskotlinreactive
+package io.github.hsedjame.serversenteventskotlinreactive.models
 
 
 enum class EventType {

@@ -1,4 +1,4 @@
-package io.github.hsedjame.serversenteventskotlinreactive
+package io.github.hsedjame.serversenteventskotlinreactive.web
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.config.CorsRegistry
@@ -14,8 +14,8 @@ class WebConfig: WebFluxConfigurer {
             .allowedOrigins("*")
     }
 
-    //override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
-    //    registry.addResourceHandler("/**")
-    //        .addResourceLocations("../../../client/src")
-    //}
+    override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        registry.addResourceHandler("/**")
+            .addResourceLocations("classpath:/static/", "classpath:/static/assets/")
+    }
 }

@@ -1,5 +1,9 @@
 package io.github.hsedjame.serversenteventskotlinreactive
 
+import io.github.hsedjame.serversenteventskotlinreactive.models.ChatEvent
+import io.github.hsedjame.serversenteventskotlinreactive.models.ChatState
+import io.github.hsedjame.serversenteventskotlinreactive.models.MsgRequest
+import io.github.hsedjame.serversenteventskotlinreactive.services.ChatService
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Value
@@ -28,62 +32,6 @@ class ServerSentEventsKotlinReactiveApplication {
         participants = AtomicReference(TreeSet()),
         messages = ConcurrentHashMap()
     )
-
-    fun withDelay(delay: Long, eventEmitter: EventEmitter,  action: suspend EventEmitter.() -> Unit) {
-        timer("action-timer", false, delay, 1) {
-            runBlocking {
-                action.invoke(eventEmitter)
-            }
-
-            cancel()
-        }
-    }
-
-    @Bean
-    fun routes(state: ChatState, sink: Sinks.Many<ChatEvent>, emitter: EventEmitter, @Value("classpath:index.html")  html: Resource) = coRouter {
-
-        GET("") {
-            ServerResponse.ok().contentType(MediaType.TEXT_HTML).bodyValueAndAwait(html)
-        }
-
-        "/chat".nest {
-            GET("/events") {
-                ServerResponse
-                    .ok()
-                    .contentType(MediaType.TEXT_EVENT_STREAM)
-                    .bodyAndAwait(sink.asFlux().asFlow())
-            }
-
-
-            accept(MediaType.APPLICATION_JSON).nest {
-
-                GET("/{name}") {
-                    it.pathVariable("name")
-                        .let { name ->
-
-                            withDelay(10, emitter) {
-                                newParticipant(name)
-                            }
-                            ServerResponse.ok().buildAndAwait()
-                        }
-                }
-
-                POST("/{name}"){ it ->
-
-                   it.awaitBody<MsgRequest>().let { msg->
-                       withDelay(10, emitter){
-                           newMessage(it.pathVariable("name"), msg.message)
-                       }
-                   }
-
-                    ServerResponse.ok().buildAndAwait()
-
-
-                }
-            }
-
-        }
-    }
 }
 
 
