@@ -68,9 +68,8 @@ data class ChatServiceImpl(private val chatSink: Sinks.Many<ChatEvent>, private 
                 }
                 else -> {}
             }
-            true
+            false
         }
-
     }
 
     private fun isCorrect(message: String): Boolean {
