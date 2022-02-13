@@ -19,7 +19,6 @@ class RoutesConfig {
 
     @Bean
     fun routes(
-        state: ChatState,
         sink: Sinks.Many<ChatEvent>,
         service: ChatService,
         @Value("classpath:/static/index.html") html: Resource
@@ -38,18 +37,15 @@ class RoutesConfig {
                     .bodyAndAwait(sink.asFlux().asFlow())
             }
 
-            accept(MediaType.APPLICATION_JSON).nest {
-
-                GET("/{name}") {
-                    handleRequest(it) {
+            GET("/{name}") {
+                handleRequest(it) {
                         name -> service.onNewUser(name)
-                    }
                 }
+            }
 
-                POST("/{name}") { it ->
-                    handleRequest(it) {
+            POST("/{name}") { it ->
+                handleRequest(it) {
                         name -> service.onNewMessage(name, it.awaitBody<MsgRequest>().message)
-                    }
                 }
             }
         }
