@@ -5,7 +5,6 @@ import io.github.hsedjame.serversenteventskotlinreactive.models.ChatState
 import io.github.hsedjame.serversenteventskotlinreactive.models.MsgRequest
 import io.github.hsedjame.serversenteventskotlinreactive.services.ChatService
 import kotlinx.coroutines.reactive.asFlow
-import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -13,27 +12,10 @@ import org.springframework.core.io.Resource
 import org.springframework.http.MediaType
 import org.springframework.web.reactive.function.server.*
 import reactor.core.publisher.Sinks
-import kotlin.concurrent.thread
 
 @Configuration
 class RoutesConfig {
 
-    fun runAsync(fn : suspend () -> Unit) {
-        thread(start = true, isDaemon = false) {
-            runBlocking {
-                fn()
-            }
-        }
-    }
-
-
-    suspend fun handleRequest(request: ServerRequest, fn : suspend () -> Unit) : ServerResponse {
-        runAsync {
-           fn()
-        }
-
-        return ServerResponse.ok().buildAndAwait()
-    }
 
     @Bean
     fun routes(
@@ -60,13 +42,13 @@ class RoutesConfig {
 
                 GET("/{name}") {
                     handleRequest(it) {
-                        service.onNewUser(it.pathVariable("name"))
+                        name -> service.onNewUser(name)
                     }
                 }
 
                 POST("/{name}") { it ->
                     handleRequest(it) {
-                        service.onNewMessage(it.pathVariable("name"), it.awaitBody<MsgRequest>().message)
+                        name -> service.onNewMessage(name, it.awaitBody<MsgRequest>().message)
                     }
                 }
             }
