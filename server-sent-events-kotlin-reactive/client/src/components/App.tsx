@@ -55,6 +55,10 @@ export class App extends React.Component<any, AppState> {
 
     }
 
+    componentWillUnmount() {
+        this.client.close()
+    }
+
     register = () =>
         this.client.register(this.state.user!);
 

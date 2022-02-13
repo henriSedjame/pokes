@@ -2,7 +2,10 @@ import {ErrorEvent, EventType, NewMessageEvent, NewUserEvent} from "../models/Ev
 
 type Consumer<T> = (t: T) => void
 
+
 export class ChatClient {
+
+    private eventSource: EventSource;
 
     constructor(
         private onNewUser: Consumer<NewUserEvent>,
@@ -10,15 +13,19 @@ export class ChatClient {
         private onNewModeratorMessage: Consumer<NewMessageEvent>,
         private onError: Consumer<ErrorEvent>
     ) {
-        new EventSource("/chat/events").onmessage = (evt) => {
+        this.eventSource = new EventSource("/chat/events");
+
+        this.eventSource.onmessage = (evt) => {
             let data = JSON.parse(evt.data);
             switch (data.type) {
-                case EventType.NEW_PARTICIPANT:
+                case EventType.NEW_PARTICIPANT: {
                     this.onNewUser(data)
                     break
-                case EventType.NEW_MESSAGE:
+                }
+                case EventType.NEW_MESSAGE: {
                     this.onNewMessage(data)
                     break
+                }
                 case EventType.MODERATOR_MESSAGE: {
                     this.onNewModeratorMessage(data)
                     break
@@ -28,6 +35,7 @@ export class ChatClient {
                 }
             }
         }
+
     }
 
     public register(name: string){
@@ -45,6 +53,10 @@ export class ChatClient {
         })
             .then(_ => fn())
             .catch(e => alert(e.message))
+    }
+
+    public close() {
+        this.eventSource.close()
     }
 
 }
