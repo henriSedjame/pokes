@@ -57,8 +57,6 @@ class RoutesConfig {
                     }
 
                     ServerResponse.ok().buildAndAwait()
-
-
                 }
             }
 

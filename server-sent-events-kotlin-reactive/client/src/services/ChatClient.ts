@@ -36,14 +36,15 @@ export class ChatClient {
     }
 
     public sendMessage(name: string, message: string, fn: () => void){
-        fn()
         fetch(`/chat/${name}`, {
             method: 'POST',
             body: JSON.stringify({message: message}),
             headers: {
                 "Content-Type" : "application/json"
             }
-        }).catch(e => alert(e.message))
+        })
+            .then(_ => fn())
+            .catch(e => alert(e.message))
     }
 
 }

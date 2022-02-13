@@ -52,7 +52,7 @@ data class ChatServiceImpl(private val chatSink: Sinks.Many<ChatEvent>, private 
                 }
             }
             false -> {
-                chatSink.tryEmitNext(NewError(sender, "This username is already used"))
+                chatSink.tryEmitNext(NewError(sender, "Oups !!! Your message has not been sended 🤷‍"))
             }
         }
 
