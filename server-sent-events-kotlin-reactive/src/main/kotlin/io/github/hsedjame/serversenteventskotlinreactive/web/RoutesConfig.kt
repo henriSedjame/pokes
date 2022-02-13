@@ -19,7 +19,7 @@ class RoutesConfig {
 
 
     @Bean
-    fun routes(state: ChatState, sink: Sinks.Many<ChatEvent>, emitter: ChatService, @Value("classpath:/static/index.html")  html: Resource) = coRouter {
+    fun routes(state: ChatState, sink: Sinks.Many<ChatEvent>, service: ChatService, @Value("classpath:/static/index.html")  html: Resource) = coRouter {
 
         GET("") {
             ServerResponse.ok().contentType(MediaType.TEXT_HTML).bodyValueAndAwait(html)
@@ -41,8 +41,8 @@ class RoutesConfig {
                     it.pathVariable("name")
                         .let { name ->
 
-                            withDelay(10, emitter) {
-                                newParticipant(name)
+                            withDelay(10, service) {
+                                onNewUser(name)
                             }
                             ServerResponse.ok().buildAndAwait()
                         }
@@ -51,8 +51,8 @@ class RoutesConfig {
                 POST("/{name}"){ it ->
 
                     it.awaitBody<MsgRequest>().let { msg->
-                        withDelay(10, emitter){
-                            newMessage(it.pathVariable("name"), msg.message)
+                        withDelay(10, service){
+                            onNewMessage(it.pathVariable("name"), msg.message)
                         }
                     }
 
