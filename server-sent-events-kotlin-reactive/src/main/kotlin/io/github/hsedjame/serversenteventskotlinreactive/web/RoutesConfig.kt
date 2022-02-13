@@ -43,10 +43,12 @@ class RoutesConfig {
                 }
             }
 
-            POST("/{name}") { it ->
-                handleRequest(it) {
-                        name -> service.onNewMessage(name, it.awaitBody<MsgRequest>().message)
-                }
+            POST("/{name}") {
+                    it.awaitBody<MsgRequest>().let { msg ->
+                        handleRequest(it) {
+                            name -> service.onNewMessage(name, msg.message)
+                        }
+                    }
             }
         }
     }
