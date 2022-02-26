@@ -22,7 +22,7 @@
     "@angular/router": "~13.2.0",
     "@ng-bootstrap/ng-bootstrap": "^11.0.0",
     "array-shuffle": "^3.0.0",
-    "awale-lib": "file= ./../lib/pkg",
+    "awale-lib": "file= ./../rust/pkg",
     "bootstrap": "^5.1.3",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
