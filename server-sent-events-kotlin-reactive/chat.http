@@ -4,9 +4,23 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:8080/chat/Abi
+GET http://localhost:8080/chat/Joe
+Content-Type: application/json
+
+###
+
+POST http://localhost:8080/chat/Chloe
 Content-Type: application/json
 
 {
-  "message" : "Fine and you?"
+  "message" : "Hi Joe!! How r u?"
+}
+
+###
+
+POST http://localhost:8080/chat/Joe
+Content-Type: application/json
+
+{
+  "message" : "Hi Joe!! How r u?"
 }

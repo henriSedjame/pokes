@@ -1,0 +1,115 @@
+
+<div class="container-fluid">
+
+  <div class="row ">
+    <div class="col-4 bg-dark text-white" *ngIf="show_rules; else showrulemenu">
+
+      <div class="mb-4 mt-2 px-2  d-flex align-items-center justify-content-end text-white" (click)="showRules()" style="cursor: pointer">
+        <div style="font-size: 1em"> ❌ </div>
+        <div class="fst-italic px-2" style="color: darkred">Masquer les règles</div>
+      </div>
+
+
+      <div *ngFor="let rule of rules">
+        <h4> {{rule.title}} </h4>
+
+        <div *ngFor="let content of rule.content">
+          <p>{{content}}</p>
+        </div>
+        <div class=" mb-2 w-100 bg-white" style="height: 2px; " ></div>
+
+      </div>
+    </div>
+
+    <ng-template #showrulemenu>
+      <div class=" mt-2 px-2 d-flex align-items-center justify-content-start text-white" (click)="showRules()" style="cursor: pointer">
+        <div style="font-size: 2em"> 📜 </div>
+        <div class="fst-italic px-2" style="color: burlywood">Afficher les règles</div>
+      </div>
+    </ng-template>
+
+    <div [ngClass]="show_rules ? 'col-8' : 'col-12'">
+      <div class="min-vh-100 d-flex justify-content-center align-items-start">
+        <div class="d-block text-center ">
+
+          <!-- Affichage Score -->
+          <div *ngIf="!finished" class="bg-dark" style=" margin: 10px 150px 200px;">
+            <div class="bg-white">
+              <h3 class="text-warning pt-1"> SCORE </h3>
+            </div>
+
+            <div class="d-flex justify-content-center align-items-center">
+              <div class="fw-bold text-white pt-2">PLAYER 1 (YOU) : </div>
+              <div class="mx-3 fw-bolder text-warning" style="font-size: 2em">{{game?.p1?.points || 0}}</div>
+            </div>
+            <div class="d-flex justify-content-center align-items-center">
+              <div class="fw-bold text-white pt-2">PLAYER 2 (PC) : </div>
+              <div class="mx-3 fw-bolder text-warning" style="font-size: 2em">{{game?.p2?.points || 0}}</div>
+            </div>
+
+          </div>
+
+          <!--Affichage resultat -->
+
+          <div *ngIf="finished" style=" margin: 10px 150px 100px;">
+            <h3 class="text-white"> FIN DE LA PARTIE </h3>
+            <div>
+              <p class="mb-3" style="font-size: 5em">🏆</p>
+
+                <h4 [ngSwitch]="winner">
+                  <i *ngSwitchCase="'USER'">
+                      <i style="font-size: 2em"> 🥇 🥇 </i> TU ES LE MEILLEUR  !!! <i style="font-size: 2em"> 🤩 🥳 </i>
+                  </i>
+
+                  <i *ngSwitchCase="'PC'">
+                    <i style="font-size: 2em"> 😥 😔 </i> TU AS PERDU !!!!  <i style="font-size: 2em"> 😥 😔 </i>
+                  </i>
+
+                  <i *ngSwitchCase="'EQUALITY'">
+                    <i style="font-size: 2em"> 🏅 🏅 </i> {{'BRAVO !! TU AS BIEN RESISTE'.toUpperCase()}}  <i style="font-size: 2em"> 🏅 🏅 </i>
+                  </i>
+                </h4>
+
+            </div>
+
+            <div class="mt-5">
+              <button class="btn btn-lg bg-dark text-white" (click)="start()">
+                REJOUER
+              </button>
+            </div>
+          </div>
+
+          <!-- plateau de jeu -->
+
+          <div class="rounded-pill py-4 px-5" style="background-color: peru">
+            <div class="container pb-2" style="width: 700px">
+              <div class="row " >
+                <div class="col-2" *ngFor="let i of game.holes.slice(0, 6).reverse(); let index = index;" >
+                  <app-hole (click)="choose($event, true)" [active]="game.p1.turn" [index]="index" [value]="i" [userhole]="true"></app-hole>
+                </div>
+              </div>
+            </div>
+
+            <div style="height: 5px; width: 100%; background-color: chocolate" ></div>
+
+            <div class="container pt-2" style="width: 700px">
+              <div class="row " >
+                <div class="col-2" *ngFor="let i of game.holes.slice(6, 12); let index = index;" >
+                  <app-hole (click)="choose($event, false)" [active]="game.p2.turn" [index]="index" [value]="i" [userhole]="false"></app-hole>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+
+

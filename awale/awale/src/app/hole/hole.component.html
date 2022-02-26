@@ -1,0 +1,14 @@
+<div  *ngIf="!endGame; else emptyHole" [ngClass]=" selected ? 'bg-danger text-white' : (active ?  ( (value > 0) ? 'bg-success text-white' : 'bg-secondary text-black') : 'bg-dark text-white')"
+     class="text-center rounded-circle align-items-center d-flex justify-content-center"
+     style="width: 100px; height: 100px;"
+     [ngStyle]="(active  && userhole && value > 0) ? {cursor: 'pointer'} : {}"
+     (click)="( active && userhole && value > 0) ? press(): null" >
+  <div class="fw-bold">{{value}}</div>
+</div>
+
+<ng-template #emptyHole>
+  <div class="text-center rounded-circle align-items-center d-flex justify-content-center bg-secondary text-black"
+        style="width: 100px; height: 100px;">
+    <div class="fw-bold">{{value}}</div>
+  </div>
+</ng-template>
