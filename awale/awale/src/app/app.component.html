@@ -73,9 +73,10 @@
     </div>
 
     <ng-template #startBloc>
-      <div class="min-vh-100 container d-flex align-items-start justify-content-center">
+      <div [ngClass]="show_rules ? 'col-8' : 'col-12'" class="min-vh-100 container d-flex align-items-start justify-content-center">
         <div class="text-center">
-          <div class="min-vw-100 text-center">
+
+          <div [ngStyle]= "show_rules ? {'margin-top': '50px'} : {} ">
             <app-logo></app-logo>
           </div>
 
