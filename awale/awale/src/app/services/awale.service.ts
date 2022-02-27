@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as wasm from 'awale-lib';
-import {Game} from "./shared";
+import {Game} from "../shared";
+import {EventService} from "./event.service";
 
 
 @Injectable({
@@ -8,13 +9,20 @@ import {Game} from "./shared";
 })
 export class AwaleService {
 
+  constructor(private eventService: EventService) {
+  }
+
   public start(): Game {
     let number = Math.random();
-    return wasm.start(number > 0.5);
+    let g = wasm.start(number > 0.5);
+    this.eventService.updateGameEmitter.next(true);
+    return g;
   }
 
   public next(i: number, game: Game): Game {
-     return wasm.run(game, i);
+     let g = wasm.run(game, i);
+     this.eventService.updateGameEmitter.next(true);
+     return g;
   }
 
   public pc_choice(state: Uint8Array): Uint32Array {

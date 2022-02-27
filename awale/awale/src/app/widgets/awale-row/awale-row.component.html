@@ -1,0 +1,7 @@
+<div [ngClass]="user ? 'pb-2' :'pt-2'" class="container" style="width: 700px">
+  <div class="row " >
+    <div class="col-2" *ngFor="let i of holes; let index = index;" >
+      <app-hole (click)="click($event)" [active]="turn" [index]="index" [value]="i" [userhole]="user"></app-hole>
+    </div>
+  </div>
+</div>

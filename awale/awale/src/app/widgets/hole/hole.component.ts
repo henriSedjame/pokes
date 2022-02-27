@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {EventService} from "../event.service";
+import {EventService} from "../../services/event.service";
+
 
 @Component({
   selector: 'app-hole',

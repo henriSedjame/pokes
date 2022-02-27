@@ -1,0 +1,23 @@
+<div *ngIf="show" style=" margin: 10px 150px 100px;">
+  <h3 class="text-white"> FIN DE LA PARTIE </h3>
+  <div>
+    <p class="mb-3" style="font-size: 5em">🏆</p>
+
+    <h4 [ngSwitch]="winner">
+      <i *ngSwitchCase="'USER'">
+        <i style="font-size: 2em"> 🥇 🥇 </i> TU ES LE MEILLEUR  !!! <i style="font-size: 2em"> 🤩 🥳 </i>
+      </i>
+
+      <i *ngSwitchCase="'PC'">
+        <i style="font-size: 2em"> 😥 😔 </i> TU AS PERDU !!!!  <i style="font-size: 2em"> 😥 😔 </i>
+      </i>
+
+      <i *ngSwitchCase="'EQUALITY'">
+        <i style="font-size: 2em"> 🏅 🏅 </i> {{'BRAVO !! TU AS BIEN RESISTE'.toUpperCase()}}  <i style="font-size: 2em"> 🏅 🏅 </i>
+      </i>
+    </h4>
+
+  </div>
+</div>
+
+

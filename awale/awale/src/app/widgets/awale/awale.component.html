@@ -1,0 +1,35 @@
+<div class="container" style="margin: 0px 0px 25px">
+  <div class="container d-flex">
+    <div class="col-1" style="font-size: 2.2em"> 👽 </div>
+    <div class="col-10 mt-4">
+      <mat-progress-bar mode="determinate" [value]="user_loading_value"  color="warn"></mat-progress-bar>
+    </div>
+  </div>
+</div>
+
+<div class="rounded-pill py-4 px-5" style="background-color: peru">
+
+  <app-awale-row [holes]="game.holes.slice(0, 6).reverse()"
+                 (onHoleClick)="click($event, true)"
+                 [user] = "true"
+                 [turn]="game.p1.turn" ></app-awale-row>
+
+  <div style="height: 5px; width: 100%; background-color: chocolate" ></div>
+
+  <app-awale-row [holes]="game.holes.slice(6, 12)"
+                 (onHoleClick)="click($event, false)"
+                 [user] = "false"
+                 [turn]="game.p2.turn" ></app-awale-row>
+</div>
+
+
+<div class="container" style="margin: 25px 0px 0px; transform: rotate(180deg)">
+  <div class="container d-flex">
+    <div class="col-1" style="font-size: 2.2em; transform: rotate(180deg)"> 🤖 </div>
+    <div class="col-10 mt-4">
+      <mat-progress-bar mode="determinate" [value]="pc_loading_value"  color="warn"></mat-progress-bar>
+    </div>
+
+  </div>
+</div>
+

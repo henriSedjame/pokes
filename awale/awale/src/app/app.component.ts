@@ -1,9 +1,13 @@
-import {Component, EventEmitter, NgZone, OnInit} from '@angular/core';
-import {AwaleService} from "./awale.service";
-import {GameChannel, Game, GameEvent, PlayerType} from "./shared";
-import {EventService} from "./event.service";
+import {Component} from '@angular/core';
+import {AwaleService} from "./services/awale.service";
+import {Game} from "./shared";
+import {EventService} from "./services/event.service";
 import arrayShuffle from "array-shuffle";
-import {RULES} from "./rules";
+import {RULES} from "./models/rules";
+import {HoleClickEvent, Result, Winner} from "./models/models";
+import {Levels} from "./models/levels";
+
+const INTERVAL = 100;
 
 @Component({
   selector: 'app-root',
@@ -20,28 +24,70 @@ export class AppComponent {
 
   rules = RULES;
 
+  started: boolean = false;
+
   finished: boolean = false;
 
-  winner?: Winner | null;
+  winner: Winner | null = null;
+
+  user_loading: number = 0;
+
+  pc_loading: number = 0;
+
+  interval!: number;
+
+  levels = [
+    Levels.LEVEL_1,
+    Levels.LEVEL_2,
+    Levels.LEVEL_3
+  ]
+
+  game_level = Levels.LEVEL_1;
 
   constructor(private service: AwaleService, private eventService: EventService) {
-    this.start();
+
+    this.eventService.updateGameEmitter.subscribe({
+        next: (updated) => {
+          if (updated) {
+            clearInterval(this.interval);
+            this.pc_loading = 0;
+            this.user_loading = 0;
+            this.chrono();
+          }
+        }
+      })
   }
 
   public start() {
     this.finished = false;
+
     this.winner = null;
     this.show_rules = false;
     this.pc_choice = undefined;
 
-    this.game = this.service.start()
+    setTimeout(()=> {
+      this.started = true;
+      this.game = this.service.start()
 
-    if (this.game.p2.turn) {
-      this.pc_play();
-    }
+      if (this.game.p2.turn) {
+        this.pc_play();
+      }
+    }, 500)
+
   }
 
-  public choose(n: number, row1: boolean) {
+  public abandon() {
+    clearInterval(this.interval);
+    this.eventService.endGameEmitter.next(true);
+    this.finished = true;
+    this.started = false;
+    this.winner = Winner.PC;
+  }
+
+  public choose(evt: HoleClickEvent) {
+
+    let n = evt.value;
+    let row1  = evt.user;
 
     // @ts-ignore
     let b = n instanceof PointerEvent;
@@ -54,11 +100,11 @@ export class AppComponent {
       let result = this.finishOrNot();
 
       if (!result.end) {
-
         if (this.game.p2.turn) {
           this.pc_play();
         }
       } else {
+        clearInterval(this.interval);
         this.eventService.endGameEmitter.next(true);
         this.finished =  true;
         this.winner = result.winner;
@@ -69,6 +115,29 @@ export class AppComponent {
 
   public showRules() {
     this.show_rules = !this.show_rules;
+  }
+
+  public chrono() {
+    this.interval = setInterval(() => {
+      if (this.game.p1.turn) {
+        this.user_loading += (INTERVAL/100);
+        if (this.user_loading >= 100) {
+          clearInterval(this.interval);
+          this.game.p1.turn = false;
+          this.user_loading=0;
+          this.game.p2.turn = true;
+          this.pc_play();
+        }
+      } else {
+        this.pc_loading += (this.game_level/100);
+        if (this.pc_loading >= 100) {
+          clearInterval(this.interval);
+          this.game.p1.turn = true;
+          this.game.p2.turn = false;
+          this.pc_loading=0;
+        }
+      }
+    }, this.game_level);
   }
 
   private finishOrNot(): Result {
@@ -125,18 +194,20 @@ export class AppComponent {
     }, 500)
   }
 
-}
+  level_Label(l: Levels) {
+    switch (l) {
+      case Levels.LEVEL_1:
+        return "NIVEAU 1 (Débutant)";
+      case Levels.LEVEL_2:
+        return "NIVEAU 2 (Intermédiaire)";
+      case Levels.LEVEL_3:
+        return "NIVEAU 3 (Expert)"
+    }
+  }
 
-class Result {
-  constructor(
-    public end: boolean,
-    public winner?: Winner | null
-  ) {
+  changeLevel(evt: any) {
+    console.log(evt)
   }
 }
 
-export enum Winner {
-  USER = 'USER',
-  PC = 'PC',
-  EQUALITY = 'EQUALITY'
-}
+

@@ -1,0 +1,15 @@
+<div class="bg-dark" [ngStyle]=" show_rules ? { margin: '50px 150px 100px'} : { margin: '0px 150px 100px'} ">
+  <div class="bg-white">
+    <h3 class="text-warning pt-1"> SCORE </h3>
+  </div>
+
+  <div class="d-flex justify-content-center align-items-center">
+    <div class="fw-bold text-white pt-2">PLAYER 1 (YOU) : </div>
+    <div class="mx-3 fw-bolder text-warning" style="font-size: 2em">{{user_score || 0}}</div>
+  </div>
+  <div class="d-flex justify-content-center align-items-center">
+    <div class="fw-bold text-white pt-2">PLAYER 2 (PC) : </div>
+    <div class="mx-3 fw-bolder text-warning" style="font-size: 2em">{{pc_score || 0}}</div>
+  </div>
+
+</div>
