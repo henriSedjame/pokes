@@ -40,24 +40,32 @@
           <app-game-result [show]="finished" [winner]="winner "></app-game-result>
 
           <!-- plateau de jeu -->
-          <app-awale *ngIf="started" [game]="game" (onHoleClick)="choose($event)"  [pc_loading_value]="pc_loading" [user_loading_value]="user_loading"></app-awale>
+          <app-awale *ngIf="!finished" [game]="game" (onHoleClick)="choose($event)"  [pc_loading_value]="pc_loading" [user_loading_value]="user_loading"></app-awale>
 
           <div class="container" style="margin-top: 150px">
             <div class="row">
 
-              <div class="col">
+              <div class="col" *ngIf="!finished">
                 <button class="btn bg-dark rounded-pill text-white" (click)="abandon()">
                  🙅🏻‍ ABANDONNER
                 </button>
               </div>
 
               <div class="col">
-                <button class="btn bg-secondary rounded-pill text-white" (click)="start()">
-                  🔄 RECOMMENCER
+
+                <div  *ngIf="finished" style="margin-top: 100px; margin-bottom: 50px">
+                  <div class="text-white fw-bolder fst-italic"> Choisis un niveau de jeu </div>
+                  <select [(ngModel)]="game_level" >
+                    <option  *ngFor =" let level of levels" [value]="level"> {{level_Label(level)}}</option>
+                  </select>
+                </div>
+
+                <button [ngClass]="finished ? 'bg-success' : 'bg-secondary rounded-pill'" class="btn  text-white" (click)="start()">
+                 {{finished ?'JOUER UNE NOUVELLE PARTIE' :' 🔄 RECOMMENCER'}}
                 </button>
               </div>
 
-              <div class="col">
+              <div class="col" *ngIf="!finished">
                 <button class="btn bg-danger rounded-pill text-white" (click)="abandon()">
                   ⛔️ ARRETER
                 </button>
@@ -82,7 +90,7 @@
 
           <div style="margin-top: 100px">
             <div class="text-white fw-bolder fst-italic"> Choisis un niveau de jeu </div>
-            <select [(ngModel)]="game_level" (ngModelChange)="changeLevel($event)" >
+            <select [(ngModel)]="game_level" >
               <option  *ngFor =" let level of levels" [value]="level"> {{level_Label(level)}}</option>
             </select>
           </div>

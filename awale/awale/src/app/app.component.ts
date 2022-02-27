@@ -194,7 +194,7 @@ export class AppComponent {
     }, 500)
   }
 
-  level_Label(l: Levels) {
+  public level_Label(l: Levels) {
     switch (l) {
       case Levels.LEVEL_1:
         return "NIVEAU 1 (Débutant)";
