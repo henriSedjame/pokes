@@ -1,8 +1,12 @@
 <div class="container" style="margin: 0px 0px 25px">
   <div class="container d-flex">
-    <div class="col-1" style="font-size: 2.2em"> 👽 </div>
+    <div class="col-1" style="font-size: 2.2em"> ⏳ </div>
     <div class="col-10 mt-4">
       <mat-progress-bar mode="determinate" [value]="user_loading_value"  color="warn"></mat-progress-bar>
+    </div>
+    <div class="col-1 bg-dark  text-center  rounded-pill text-white pt-1 mt-1"
+         style=" width: 45px; height: 45px; font-size: 1.5em; margin-left: 4px"
+         *ngIf="user_count > 0">{{user_count}}
     </div>
   </div>
 </div>
@@ -12,6 +16,8 @@
   <app-awale-row [holes]="game.holes.slice(0, 6).reverse()"
                  (onHoleClick)="click($event, true)"
                  [user] = "true"
+                 [gain]="gain"
+                 [changeCode]="changeCode"
                  [turn]="game.p1.turn" ></app-awale-row>
 
   <div style="height: 5px; width: 100%; background-color: chocolate" ></div>
@@ -19,17 +25,24 @@
   <app-awale-row [holes]="game.holes.slice(6, 12)"
                  (onHoleClick)="click($event, false)"
                  [user] = "false"
+                 [gain]="gain"
+                 [changeCode]="changeCode"
                  [turn]="game.p2.turn" ></app-awale-row>
 </div>
 
 
 <div class="container" style="margin: 25px 0px 0px; transform: rotate(180deg)">
   <div class="container d-flex">
-    <div class="col-1" style="font-size: 2.2em; transform: rotate(180deg)"> 🤖 </div>
+    <div class="col-1" style="font-size: 2.2em; transform: rotate(180deg)"> ⏳ </div>
     <div class="col-10 mt-4">
       <mat-progress-bar mode="determinate" [value]="pc_loading_value"  color="warn"></mat-progress-bar>
     </div>
 
+
+    <div class="col-1 bg-dark  text-center  rounded-pill text-white pt-1 mt-1"
+         style=" width: 45px; height: 45px; font-size: 1.5em; margin-left: 4px; transform: rotate(180deg)"
+         *ngIf="pc_count > 0">{{pc_count}}
+    </div>
   </div>
 </div>
 

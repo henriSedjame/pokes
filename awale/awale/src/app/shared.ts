@@ -31,16 +31,18 @@ export class Player {
   }
 }
 
+export class HoleState {
+  constructor(
+    public index: number,
+    public nb: number) {
+  }
+}
 
 export class GameEvent {
   constructor(
-    public running: boolean,
-    public index: number,
-    public nb: number,
-    public count: number,
-    public player?: boolean,
-    public gain?: number,
-
+    public states: HoleState[],
+    public gain: number,
+    public end: boolean
   ) {}
 }
 
@@ -67,14 +69,6 @@ export class Game {
 
 }
 
-export class GameChannel {
-  constructor(public channel: MessageChannel) {
-  }
-
-  public send(evt: GameEvent) {
-    this.channel.port1.postMessage(evt);
-  }
-}
 
 
 

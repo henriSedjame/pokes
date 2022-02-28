@@ -45,18 +45,17 @@ extern "C" {
   #[wasm_bindgen(method, getter, js_name = get_p2)]
   fn p2(this: &Game) -> Player;
 
-  /* Game channel*/
-  pub type GameChannel;
+  /* Hole state */
+  pub type HoleState;
 
-  #[wasm_bindgen(method,  js_name = send)]
-  fn send(this: &GameChannel, evt: GameEvent);
+  #[wasm_bindgen(constructor)]
+  fn new_hole_state(index: usize, nb: u8) -> HoleState;
 
   /* GameEvent*/
   pub type GameEvent;
 
   #[wasm_bindgen(constructor)]
-  fn new_event(running: bool, index: usize, nb: u8, count: u8, player: bool, gain: Option<u8> ) -> GameEvent;
-
+  fn new_event(states: Vec<HoleState>, gain: u8, end: bool) -> GameEvent;
 
 }
 
@@ -114,8 +113,6 @@ pub fn next(i: usize, state: Vec<u8>) ->  NextResult {
 
   let mut v: Vec<u8> = Vec::from(state);
 
-  log(format!("current state : {:?} With index {}", v, i).as_str());
-
   let is_user_row = |i: usize| i <= 5;
 
   // le nombre de graines dans le trou de départ
@@ -165,7 +162,6 @@ pub fn next(i: usize, state: Vec<u8>) ->  NextResult {
     let mut p = 0;
 
     while current >= (if i > 5 { 0 } else { 6 }) {
-      log(format!("Calculate Points current : {}", current).as_str());
 
       let pt = v[current];
 
@@ -182,8 +178,6 @@ pub fn next(i: usize, state: Vec<u8>) ->  NextResult {
         } else {
           current -= 1;
         }
-
-        log(format!("Points : {}", p).as_str());
 
       }
 
@@ -204,7 +198,6 @@ pub fn pc_choice(state: Vec<u8>)  -> Vec<usize> {
 
   for i in 6..12 {
 
-    log(format!("PC-CHOICE ===> {}", i).as_str());
     if state[i] != 0 {
 
       indexes.push(i);
@@ -228,91 +221,82 @@ pub fn pc_choice(state: Vec<u8>)  -> Vec<usize> {
 
 }
 
-
 #[wasm_bindgen]
-pub fn play(i: usize, state: Vec<u8>, channel: GameChannel) {
+pub fn next_turn(i: usize, state: Vec<u8>) -> GameEvent {
 
-  let mut v: Vec<u8> = Vec::from(state);
+  let mut states = vec![];
 
-  log(format!("current state : {:?} With index {}", v, i).as_str());
+  let mut end = true;
 
-  let is_user_row = |i: usize| i <= 5;
+  let mut points = 0;
 
-  // le nombre de graines dans le trou de départ
-  let mut count = v[i];
+  if state[i] > 0 {
 
+    let mut v: Vec<u8> = Vec::from(state);
 
-  let mut current = i ;
+    let is_user_row = |i: usize| i <= 5;
 
+    // le nombre de graines dans le trou de départ
+    let mut count = v[i];
 
-  v[i] = 0;
+    //log(format!("count : {:?}", count).as_str());
 
-  channel.send(GameEvent::new_event(true, current, v[current], count, is_user_row(i), None));
-
-  while count > 0 {
-
-    current = (current + 1) % 12;
-
-    //log(format!("current index : {:?}", current).as_str());
-
-    // Si le nombre de graines prises dans un trou excède 11,
-    // on sème pendant un tour complet, on saute le trou de départ,
-    // puis on continue à semer dans les autres trous suivants.
-    if current == i {
-      continue;
-    }
-
-    v[current] += 1;
-
-    count -= 1;
-
-    channel.send(GameEvent::new_event(true, current, v[current], count, is_user_row(i), None));
-
-    log(format!("Current ::: {}", current).as_str());
-  }
-
-  log(format!("{} ::: IS USER ROW {} vs {}", current , is_user_row(i), is_user_row(current)).as_str());
+    // l'index du trou courant
+    let mut current = i ;
 
 
-  if (is_user_row(i) == is_user_row(current)) && v[current] != 1 {
+    // on vide le trou de départ
+    v[i] = 0;
 
-    log(format!("Run again {}", current).as_str());
+    states.push(HoleState::new_hole_state(i,0));
 
-     play(current, v, channel);
+    while count > 0 {
 
-  } else  {
+      current = (current + 1) % 12;
 
-    let mut p = 0;
+      if current == i {
 
-    while current > if i > 5 { 0 } else { 6 } {
-
-      let pt = v[current];
-
-      if pt !=2 && pt != 3 {
-
-        break;
-
-      } else {
-
-        p += pt;
-        v[current] = 0;
-
-        channel.send(GameEvent::new_event(true, current, v[current], count, is_user_row(i), None));
-
-        current -= 1;
-
-        log(format!("Points : {}", p).as_str());
-
+        continue;
       }
 
+      v[current] += 1;
+
+      count -= 1;
+
+      states.push(HoleState::new_hole_state(current, v[current]))
+
     }
 
-    channel.send(GameEvent::new_event(false, current, 0, 0, is_user_row(i), Some(p)));
+    if (is_user_row(i) == is_user_row(current)) && v[current] != 1 {
+
+      end = false;
+
+    } else {
+
+      while current >= (if i > 5 { 0 } else { 6 }) {
+
+        let pt = v[current];
+
+        if pt != 2 && pt != 3 {
+          break;
+        } else {
+          points += pt;
+          v[current] = 0;
+          states.push(HoleState::new_hole_state(current, v[current]));
+          if current == 0 {
+            break;
+          } else {
+            current -= 1;
+          }
+
+        }
+      }
+    }
 
   }
 
+  GameEvent::new_event(states, points, end)
 }
-
 
 
 

@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {AwaleService} from "./services/awale.service";
-import {Game} from "./shared";
+import {Game, GameEvent} from "./shared";
 import {EventService} from "./services/event.service";
 import arrayShuffle from "array-shuffle";
 import {RULES} from "./models/rules";
@@ -34,7 +34,15 @@ export class AppComponent {
 
   pc_loading: number = 0;
 
+  user_count: number = 0;
+
+  pc_count: number = 0;
+
   interval!: number;
+
+  changeCode: string = "";
+
+  gain: boolean = false;
 
   levels = [
     Levels.LEVEL_1,
@@ -52,7 +60,7 @@ export class AppComponent {
             clearInterval(this.interval);
             this.pc_loading = 0;
             this.user_loading = 0;
-            this.chrono();
+            //this.chrono();
           }
         }
       })
@@ -72,6 +80,7 @@ export class AppComponent {
       if (this.game.p2.turn) {
         this.pc_play();
       }
+      this.chrono();
     }, 500)
 
   }
@@ -82,35 +91,6 @@ export class AppComponent {
     this.finished = true;
     this.started = false;
     this.winner = Winner.PC;
-  }
-
-  public choose(evt: HoleClickEvent) {
-
-    let n = evt.value;
-    let row1  = evt.user;
-
-    // @ts-ignore
-    let b = n instanceof PointerEvent;
-
-    if (!b) {
-      n = Number(n);
-      let i = row1 ? (6 - (n + 1)) : (n + 6);
-      this.game = this.service.next(i, (this.game));
-
-      let result = this.finishOrNot();
-
-      if (!result.end) {
-        if (this.game.p2.turn) {
-          this.pc_play();
-        }
-      } else {
-        clearInterval(this.interval);
-        this.eventService.endGameEmitter.next(true);
-        this.finished =  true;
-        this.winner = result.winner;
-      }
-
-    }
   }
 
   public showRules() {
@@ -205,8 +185,107 @@ export class AppComponent {
     }
   }
 
-  changeLevel(evt: any) {
-    console.log(evt)
+  public async onChoose(evt: HoleClickEvent) {
+
+    let n = evt.value;
+    let row1  = evt.user;
+
+    // @ts-ignore
+    let b = n instanceof PointerEvent;
+
+    if (!b) {
+      n = Number(n);
+      let i = row1 ? (6 - (n + 1)) : (n + 6);
+
+      await this.handleEvent(i);
+
+      let result = this.finishOrNot();
+
+      if (!result.end) {
+        this.chrono();
+        if (this.game.p2.turn) {
+          this.pc_play();
+        }
+      } else {
+        clearInterval(this.interval);
+        this.eventService.endGameEmitter.next(true);
+        this.finished =  true;
+        this.winner = result.winner;
+      }
+
+    }
+  }
+
+  private async handleEvent(i: number)  {
+
+
+
+    let n = i;
+    let game_event: GameEvent;
+
+    do {
+
+      if (this.game.p1.turn) {
+        this.user_count = this.game.holes[n];
+      } else {
+        this.pc_count = this.game.holes[n];
+      }
+
+      await this.delay(500);
+
+      game_event = this.service.next_turn(n, this.game);
+
+      n = game_event.states[game_event.states.length -1].index;
+
+      for (const hstate of game_event.states) {
+
+        this.game.holes[hstate.index] = hstate.nb;
+
+        if (game_event.states.indexOf(hstate) != 0) {
+          if (this.game.p1.turn) {
+            this.user_count --;
+          } else {
+            this.pc_count --;
+          }
+
+          if (hstate.nb == 0) {
+            this.gain = true;
+          }
+        }
+
+
+        if (hstate.index <=5) {
+          let n = 5 - hstate.index;
+          this.changeCode = `u${n}`;
+        } else {
+          let n = hstate.index - 6;
+          this.changeCode = `p${n}`;
+        }
+
+        await this.delay(500);
+      }
+
+
+
+      if (this.game.p1.turn) {
+        this.game.p1.points += game_event.gain;
+      } else {
+        this.game.p2.points += game_event.gain;
+      }
+
+      if (game_event.end) {
+        this.game.p1.turn = !this.game.p1.turn;
+        this.game.p2.turn = !this.game.p2.turn;
+        this.changeCode = "";
+        this.gain = false;
+      }
+
+    } while (!game_event.end)
+
+  }
+
+  private delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
   }
 }
 

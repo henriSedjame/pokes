@@ -19,9 +19,20 @@ export class AwaleComponent implements OnInit {
   @Input()
   pc_loading_value!: number;
 
+  @Input()
+  user_count!: number;
+
+  @Input()
+  pc_count!: number;
+
   @Output()
   onHoleClick: EventEmitter<HoleClickEvent> = new EventEmitter<HoleClickEvent>();
 
+  @Input()
+  changeCode!: string;
+
+  @Input()
+  gain!: boolean;
 
   constructor() { }
 

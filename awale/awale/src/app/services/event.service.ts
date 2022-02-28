@@ -12,5 +12,7 @@ export class EventService {
 
   public updateGameEmitter: Subject<boolean> = new Subject<boolean>();
 
+  public changeHoleEmitter: Subject<number> = new Subject<number>();
+
   constructor() { }
 }

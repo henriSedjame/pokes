@@ -20,6 +20,12 @@ export class AwaleRowComponent implements OnInit {
   @Output()
   onHoleClick: EventEmitter<number> = new EventEmitter<number>()
 
+  @Input()
+  changeCode!: string;
+
+  @Input()
+  gain!: boolean;
+
   constructor() { }
 
   ngOnInit(): void {
@@ -27,5 +33,9 @@ export class AwaleRowComponent implements OnInit {
 
   click(n: number) {
     this.onHoleClick.emit(n)
+  }
+
+  isChanging(index: number): boolean {
+    return this.user ? (this.changeCode == `u${index}`) : (this.changeCode == `p${index}`);
   }
 }
