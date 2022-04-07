@@ -29,7 +29,6 @@ class GrpcApplicationEngine(
     override fun start(wait: Boolean): ApplicationEngine {
         server = ServerBuilder
             .forPort(configuration.port)
-
             .apply(configuration.serverConfigurer)
             .build()
 
@@ -47,6 +46,4 @@ class GrpcApplicationEngine(
         server?.awaitTermination(gracePeriodMillis, TimeUnit.MILLISECONDS)
         server?.shutdownNow()
     }
-
-
 }
