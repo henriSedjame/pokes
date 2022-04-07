@@ -9,7 +9,6 @@ import kotlin.concurrent.thread
 
 
 fun main(args: Array<String>): Unit {
-   // io.ktor.server.netty.EngineMain.main(args)
 
     thread(true) {
         embeddedServer(GrpcServer, configure = {
@@ -27,10 +26,4 @@ fun main(args: Array<String>): Unit {
     }
 
 
-}
-
-
-@Suppress("unused") // application.conf references the main function. This annotation prevents the IDE from marking it as unused.
-fun Application.module() {
-    configureRouting()
 }
