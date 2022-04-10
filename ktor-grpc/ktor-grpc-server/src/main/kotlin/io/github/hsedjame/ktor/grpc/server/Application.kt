@@ -2,28 +2,21 @@ package io.github.hsedjame.ktor.grpc.server
 
 import io.github.hsedjame.ktor.grpc.server.grpc.GrpcServer
 import io.github.hsedjame.ktor.grpc.server.plugins.configureRouting
-import io.ktor.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import kotlin.concurrent.thread
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 
-fun main(args: Array<String>): Unit {
+suspend fun main(args: Array<String>): Unit = coroutineScope {
 
-    thread(true) {
-        embeddedServer(GrpcServer, configure = {
-            port = 7777
-            serverConfigurer = {
-                this.addService(HelloService())
-            }
-        }) {}.start(true)
-    }
-
-    thread(true) {
+    launch {
         embeddedServer(Netty, port = 8080, host = "0.0.0.0"){
             configureRouting()
         }.start(true)
     }
 
-
+    launch {
+        embeddedServer(GrpcServer) {}.start(true)
+    }
 }
