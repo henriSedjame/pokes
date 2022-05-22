@@ -1,2 +1,10 @@
 /.idea/
 /SpringReactivePgJson/.mvn/
+
+/todo_app/rust/target/
+
+/todo_app/ui/.idea/
+/todo_app/ui/.dart_tool/
+
+/todo_app/ui/ios/Runner/*.a
+/todo_app/ui/android/app/src/main/jniLibs
